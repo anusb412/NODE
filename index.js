@@ -1,19 +1,13 @@
-const EventEmitter = require("node:events");
+const http = require("node:http");
+const fs = require("node:fs");
 
-const emitter = new EventEmitter()
+const server = http.createServer((req, res) => {
 
-emitter.on("order-pizza", (size, topping) => {
-    console.log(`Order received! Baking a ${size} pizza with ${topping}`)
+    res.writeHead(200, { "Content-Type": "text/html" });
+    const html = fs.readFileSync("./index.html", "utf-8")
+    res.end(html);
 });
 
-emitter.on("order-pizza", (size) => {
-    if (size === "large") {
-        console.log("Serving complimentary drink");
-    }
-});
-
-console.log("Do work before event occurs in the system");
-
-emitter.emit("order-pizza", "large", "mushroom");
-
-console.log("Thanks for stopping by!")
+server.listen(3000, () => {
+    console.log("Server running on port 3000")
+})
